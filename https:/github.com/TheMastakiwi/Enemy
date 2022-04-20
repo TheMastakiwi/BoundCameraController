@@ -1,0 +1,50 @@
+using System.Collections;
+using System.Collections.Generic;
+using UnityEngine;
+
+public class Enemy : MonoBehaviour
+{
+    public Transform target;
+    public float speed;
+    public float attackRange;
+    public int health;
+
+    CircleCollider2D territory;
+
+    public void MoveToPlayer ()
+    {
+        transform.LookAt(target.position);
+        transform.Rotate(new Vector3 (0, -90, 0));
+
+        if (Vector3.Distance (transform.position, target.position) > attackRange) 
+        {
+            transform.Translate(new Vector3(speed * Time.deltaTime, 0, 0));
+        }
+    }
+
+    public void Rest ()
+    {
+        //Idle State Move Back and Forth or Something Else
+        return;
+    }
+
+    public void TakeDamage(int damage) {
+        health -= damage;
+
+        if(health <= 0) {
+            Die();
+        }
+    }
+
+    void Die() {
+        Destroy(gameObject);
+    }
+
+    void OnTriggerEnter2D(Collider2D hit) {
+        if(hit.gameObject.tag == "Player") {
+            Debug.Log("Hit");
+            Player player = hit.GetComponent<Player>();
+            player.TakeDamage(25);
+        }
+    }
+}
