@@ -1,0 +1,42 @@
+using System.Collections;
+using System.Collections.Generic;
+using UnityEngine;
+
+public class PositionController : MonoBehaviour
+{
+    Player player;
+    public BoxCollider2D BoxCollider2D;
+
+    void Start()
+    {
+        player = Object.FindObjectOfType<Player>();
+    }
+
+    void OnTriggerEnter2D(Collider2D hit) {
+        if(gameObject.tag == "Save Point" && hit.gameObject.tag == "Player") {
+            player.SetSavepoint(transform.position);
+        }
+        if(gameObject.tag == "Check Point" && hit.gameObject.tag == "Player") {
+            player.SetCheckpoint(transform.position);
+        }
+        if(gameObject.tag == "Death Point" && hit.gameObject.tag == "Player") {
+            player.SetPosition();
+            player.TakeDamage(25);
+        }
+    }
+
+    void OnDrawGizmos() {
+        if(gameObject.tag == "Save Point") {
+            Gizmos.color = new Color(0,1,0,.5f);
+            Gizmos.DrawCube(new Vector3(transform.position.x + BoxCollider2D.offset.x, transform.position.y + BoxCollider2D.offset.y, transform.position.z), new Vector3(BoxCollider2D.size.x, BoxCollider2D.size.y, 1));
+        }
+        if(gameObject.tag == "Check Point") {
+            Gizmos.color = new Color(1,0,1,.5f);
+            Gizmos.DrawCube(new Vector3(transform.position.x + BoxCollider2D.offset.x, transform.position.y + BoxCollider2D.offset.y, transform.position.z), new Vector3(BoxCollider2D.size.x, BoxCollider2D.size.y, 1));
+        }
+        if(gameObject.tag == "Death Point") {
+            Gizmos.color = new Color(1,0,0,.5f);
+            Gizmos.DrawCube(new Vector3(transform.position.x + BoxCollider2D.offset.x, transform.position.y + BoxCollider2D.offset.y, transform.position.z), new Vector3(BoxCollider2D.size.x, BoxCollider2D.size.y, 1));
+        }
+    }
+}
